@@ -764,17 +764,17 @@ export default function HomePage() {
                     language === "hi" ? "font-deva text-[36px] sm:text-5xl xl:text-[62px]" : ""
                   }`}
                 >
-                  {language === "hi" ? (
-                    <>
-                      {i18n.heroHeadline1}<br />
-                      <span className="text-glow-lime">{i18n.heroHeadline2}</span>
-                    </>
-                  ) : (
+                  {language === "en" ? (
                     <>
                       The machine<br />
                       said <span className="text-glow-cyan">no.</span><br />
                       <span className="font-serif-l font-medium italic text-slate-100">The machine must </span>
                       <span className="text-glow-lime whitespace-nowrap">say why.</span>
+                    </>
+                  ) : (
+                    <>
+                      {i18n.heroHeadline1}<br />
+                      <span className="text-glow-lime">{i18n.heroHeadline2}</span>
                     </>
                   )}
                 </motion.h1>
