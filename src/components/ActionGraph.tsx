@@ -4,7 +4,9 @@ import { CheckCircle2, Circle, Loader2, ShieldCheck, Terminal, GitBranch, AlertT
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Scenario } from '../lib/types';
 import { PHASES, type PhaseId, type LogLine } from '../lib/resolver';
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
+import { getTranslation } from '../lib/i18n';
+import type { Language } from '@/types/resolve';
 
 export type NodeState = 'pending' | 'active' | 'verified' | 'patched' | 'flagged';
 
@@ -22,6 +24,7 @@ interface Props {
   logs: LogLine[];
   visibleRedTeam: number; // -1 idle, 0..2 reveal index, 3 = all revealed + sealed
   onFocusSource: (url: string) => void;
+  language?: string;
 }
 
 const PHASE_TONE: Record<string, string> = {
@@ -32,7 +35,8 @@ const PHASE_TONE: Record<string, string> = {
   shield: 'text-lime-300',
 };
 
-export default function ActionGraph({ scenario, phase, activePhase, nodeStates, logs, visibleRedTeam, onFocusSource }: Props) {
+export default function ActionGraph({ scenario, phase, activePhase, nodeStates, logs, visibleRedTeam, onFocusSource, language = 'en' }: Props) {
+  const i18n = useMemo(() => getTranslation((language as Language) || 'en'), [language]);
   const logRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
@@ -42,13 +46,13 @@ export default function ActionGraph({ scenario, phase, activePhase, nodeStates, 
 
   // Action graph nodes per scenario (7 stages)
   const nodes: GraphNodeView[] = [
-    { id: 'n1', label: 'Classify document', status: nodeStates.n1 ?? 'pending' },
-    { id: 'n2', label: 'Mask PII on-device', status: nodeStates.n2 ?? 'pending' },
-    { id: 'n3', label: 'Retrieve official sources', status: nodeStates.n3 ?? 'pending' },
-    { id: 'n4', label: 'Verify quotes verbatim', status: nodeStates.n4 ?? 'pending' },
-    { id: 'n5', label: 'Draft legal position', status: nodeStates.n5 ?? 'pending' },
-    { id: 'n6', label: 'Red-team the draft', status: nodeStates.n6 ?? 'pending' },
-    { id: 'n7', label: 'Assemble & re-hydrate', status: nodeStates.n7 ?? 'pending' },
+    { id: 'n1', label: i18n.nodeClassify, status: nodeStates.n1 ?? 'pending' },
+    { id: 'n2', label: i18n.nodeMask, status: nodeStates.n2 ?? 'pending' },
+    { id: 'n3', label: i18n.nodeSources, status: nodeStates.n3 ?? 'pending' },
+    { id: 'n4', label: i18n.nodeVerify, status: nodeStates.n4 ?? 'pending' },
+    { id: 'n5', label: i18n.nodeDraft, status: nodeStates.n5 ?? 'pending' },
+    { id: 'n6', label: i18n.nodeRedTeam, status: nodeStates.n6 ?? 'pending' },
+    { id: 'n7', label: i18n.nodeAssemble, status: nodeStates.n7 ?? 'pending' },
   ];
 
   return (
@@ -57,10 +61,10 @@ export default function ActionGraph({ scenario, phase, activePhase, nodeStates, 
       <div className="flex items-center justify-between border-b border-slate-800/80 px-4 py-2.5">
         <div className="flex items-center gap-2">
           <GitBranch size={13} className="text-lime-400" />
-          <h2 className="font-display text-[11px] font-bold uppercase tracking-[0.2em] text-slate-200">Action Graph · Red-Team Arena</h2>
+          <h2 className="font-display text-[11px] font-bold uppercase tracking-[0.2em] text-slate-200">{i18n.actionGraphTitle}</h2>
         </div>
         <div className="flex items-center gap-2 font-mono-t text-[8px] uppercase tracking-widest text-slate-500">
-          <span className={done ? 'text-lime-400' : 'text-slate-500'}>{done ? '7/7 STAGES SEALED' : phase === 'running' ? 'EXECUTING' : 'AWAITING RUN'}</span>
+          <span className={done ? 'text-lime-400' : 'text-slate-500'}>{done ? i18n.stagesSealed : phase === 'running' ? 'EXECUTING' : 'AWAITING RUN'}</span>
         </div>
       </div>
 
@@ -70,7 +74,7 @@ export default function ActionGraph({ scenario, phase, activePhase, nodeStates, 
           <div className="flex items-center justify-between border-b border-slate-800/70 px-2.5 py-1.5">
             <div className="flex items-center gap-1.5">
               <Terminal size={10} className="text-slate-500" />
-              <span className="font-mono-t text-[8px] font-bold uppercase tracking-[0.2em] text-slate-500">orchestrator · nemotron routing trace</span>
+              <span className="font-mono-t text-[8px] font-bold uppercase tracking-[0.2em] text-slate-500">{i18n.traceHeader}</span>
             </div>
             <div className="flex gap-1">
               <span className="h-2 w-2 rounded-full bg-slate-700" />
@@ -104,7 +108,7 @@ export default function ActionGraph({ scenario, phase, activePhase, nodeStates, 
             {logs.length === 0 ? (
               <div className="text-slate-600">
                 <span className="text-slate-700">$</span> nirvaxis — bilateral friction engine v1.0.0{'\n'}
-                <span className="text-slate-700">$</span> awaiting case file… press <span className="rounded border border-lime-400/40 bg-lime-400/10 px-1 text-lime-400">RESOLVE THIS DISPUTE</span>
+                <span className="text-slate-700">$</span> {i18n.traceAwaiting}
                 <span className="caret text-lime-400"> ▊</span>
               </div>
             ) : (

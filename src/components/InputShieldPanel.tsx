@@ -9,6 +9,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import type { Scenario } from '../lib/types';
 import { SCENARIOS } from '../lib/scenarios';
 import { redact, tokenColor, type TokenType } from '../lib/piiShield';
+import { getTranslation } from '../lib/i18n';
+import type { Language } from '@/types/resolve';
 
 /* ---------- Seed literal → deterministic TOKEN type map (for curation-driven masking) ---------- */
 function seedTypeFor(s: Scenario): TokenType[] {
@@ -29,14 +31,16 @@ interface Props {
   phase: 'idle' | 'running' | 'done';
   onResolve: () => void;
   progress: number; // 0..1
+  language?: string;
 }
 
 const SCENARIO_ICONS = [GraduationCap, Plane, Home] as const;
 const SEED_CACHE: Record<string, string[]> = {};
 
 export default function InputShieldPanel({
-  scenario, onScenario, masked, onMasked, tokenList, onTokenList, phase, onResolve, progress,
+  scenario, onScenario, masked, onMasked, tokenList, onTokenList, phase, onResolve, progress, language = 'en',
 }: Props) {
+  const i18n = useMemo(() => getTranslation((language as Language) || 'en'), [language]);
   const [rawText, setRawText] = useState(scenario.rawNotice);
   const [vent, setVent] = useState(scenario.ventText);
   const [dragOver, setDragOver] = useState(false);
@@ -94,11 +98,11 @@ export default function InputShieldPanel({
       <div className="flex items-center justify-between border-b border-slate-800/80 px-4 py-2.5">
         <div className="flex items-center gap-2">
           <Fingerprint size={13} className="text-cyan-400" />
-          <h2 className="font-display text-[11px] font-bold uppercase tracking-[0.2em] text-slate-200">Input · Privacy Shield</h2>
+          <h2 className="font-display text-[11px] font-bold uppercase tracking-[0.2em] text-slate-200">{i18n.inputShieldTitle}</h2>
         </div>
         <div className="flex items-center gap-1.5 rounded-md border border-lime-400/30 bg-lime-400/10 px-2 py-1">
           <ShieldCheck size={10} className="text-lime-400" />
-          <span className="font-mono-t text-[8px] font-bold tracking-widest text-lime-300">ON-DEVICE · ZERO PII LEAVES</span>
+          <span className="font-mono-t text-[8px] font-bold tracking-widest text-lime-300">{i18n.inputShieldBadge}</span>
         </div>
       </div>
 
@@ -106,7 +110,7 @@ export default function InputShieldPanel({
         {/* Scenario picker */}
         <div>
           <div className="mb-1.5 flex items-center justify-between">
-            <span className="font-mono-t text-[8.5px] font-bold uppercase tracking-[0.2em] text-slate-500">01 · Load a case file</span>
+            <span className="font-mono-t text-[8.5px] font-bold uppercase tracking-[0.2em] text-slate-500">{i18n.loadCaseFile}</span>
             <span className="font-mono-t text-[8px] text-slate-600">3 PRE-SEED FILES</span>
           </div>
           <div className="grid grid-cols-3 gap-1.5">
@@ -145,21 +149,21 @@ export default function InputShieldPanel({
               {dragOver ? <UploadCloud size={16} className="text-cyan-400" /> : <FileText size={16} className="text-slate-500" />}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="text-[10px] font-semibold text-slate-300">Drop the rejection letter / PDF / HTML</p>
-              <p className="font-mono-t text-[7.5px] uppercase tracking-wider text-slate-600">Parsed locally · never uploaded raw</p>
+              <p className="text-[10px] font-semibold text-slate-300">{i18n.dropNotice}</p>
+              <p className="font-mono-t text-[7.5px] uppercase tracking-wider text-slate-600">{i18n.parsedLocally}</p>
             </div>
             <button
               onClick={() => fileRef.current?.click()}
               className="shrink-0 rounded-md border border-slate-700 px-2 py-1.5 font-mono-t text-[8px] font-bold tracking-widest text-slate-400 transition-colors hover:border-cyan-400/50 hover:text-cyan-300"
             >
-              BROWSE
+              {i18n.browseBtn}
             </button>
             <input ref={fileRef} type="file" accept=".pdf,.txt,.html,.eml,.png,.jpg" className="hidden" onChange={(e) => handleFile(e.target.files?.[0])} />
           </div>
           {/* Raw notice viewer */}
           <div className="border-t border-slate-800/70">
             <button onClick={() => setShowRaw((v) => !v)} className="flex w-full items-center justify-between px-2.5 py-1.5 font-mono-t text-[8px] font-bold uppercase tracking-[0.18em] text-slate-500 transition-colors hover:text-slate-300">
-              <span>{showRaw ? 'Hide' : 'View'} raw case text ({rawText.length} chars)</span>
+              <span>{showRaw ? i18n.hideRawCase : i18n.viewRawCase} ({rawText.length} chars)</span>
               {showRaw ? <ChevronUp size={11} /> : <ChevronDown size={11} />}
             </button>
             {showRaw && (
@@ -177,7 +181,7 @@ export default function InputShieldPanel({
         <div className="panel-inset overflow-hidden">
           <button onClick={() => setShowVent((v) => !v)} className="flex w-full items-center gap-2 px-2.5 py-2 text-left">
             <Flame size={12} className="shrink-0 text-orange-400" />
-            <span className="flex-1 truncate text-[10px] font-semibold text-orange-200/90">Vent box — say it raw, we&apos;ll translate the rage into law</span>
+            <span className="flex-1 truncate text-[10px] font-semibold text-orange-200/90">{i18n.ventBoxTitle}</span>
             {showVent ? <ChevronUp size={11} className="text-slate-500" /> : <ChevronDown size={11} className="text-slate-500" />}
           </button>
           {showVent && (
@@ -189,7 +193,7 @@ export default function InputShieldPanel({
                 spellCheck={false}
                 className="scroll-slim w-full resize-none rounded-lg border border-orange-400/20 bg-orange-950/10 p-2 text-[10.5px] leading-relaxed text-orange-100/90 outline-none focus:border-orange-400/40"
               />
-              <p className="mt-1 font-mono-t text-[7.5px] uppercase tracking-wider text-orange-300/50">Distilled into objective facts before drafting · emotional register never reaches the officer</p>
+              <p className="mt-1 font-mono-t text-[7.5px] uppercase tracking-wider text-orange-300/50">{i18n.ventBoxNote}</p>
             </div>
           )}
         </div>
@@ -199,7 +203,7 @@ export default function InputShieldPanel({
           <div className="mb-1.5 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Eye size={12} className="text-amber-400" />
-              <span className="font-mono-t text-[8.5px] font-bold uppercase tracking-[0.2em] text-amber-400/90">What the AI actually saw</span>
+              <span className="font-mono-t text-[8.5px] font-bold uppercase tracking-[0.2em] text-amber-400/90">{i18n.whatAiSaw}</span>
             </div>
             <button
               onClick={() => setHydrated((v) => !v)}
@@ -207,7 +211,7 @@ export default function InputShieldPanel({
               title="Re-hydration happens HERE, on this device, after inference"
             >
               <Languages size={9} />
-              {hydrated ? 'SHOW MASKED' : 'RE-HYDRATE LOCALLY'}
+              {hydrated ? i18n.showMasked : i18n.rehydrateLocally}
             </button>
           </div>
           <div className="panel-inset relative max-h-36 overflow-hidden">
@@ -217,8 +221,8 @@ export default function InputShieldPanel({
             </pre>
           </div>
           <div className="mt-1 flex items-center justify-between font-mono-t text-[7px] uppercase tracking-wider text-slate-600">
-            <span>Masked in {maskTimeMs}ms · deterministic regex + seed map</span>
-            <span className="text-amber-500">{total} tokens · 6 classes</span>
+            <span>{i18n.maskedInMs} {maskTimeMs}ms · deterministic regex + seed map</span>
+            <span className="text-amber-500">{total} {i18n.tokensFound}</span>
           </div>
         </div>
 
@@ -250,19 +254,19 @@ export default function InputShieldPanel({
             {phase === 'running' ? (
               <>
                 <Loader2 size={15} className="animate-spin" />
-                <span>Orchestrating {Math.round(progress * 100)}%</span>
+                <span>{i18n.btnOrchestrating} {Math.round(progress * 100)}%</span>
                 <div className="absolute bottom-0 left-0 h-[3px] bg-lime-400/80 transition-all duration-200" style={{ width: `${progress * 100}%` }} />
               </>
             ) : phase === 'done' ? (
               <>
                 <Stamp size={15} />
-                <span>Run Complete — Re-resolve</span>
+                <span>{i18n.btnRunComplete}</span>
                 <Wand2 size={13} className="opacity-70" />
               </>
             ) : (
               <>
                 <Stamp size={15} />
-                <span>Resolve This Dispute</span>
+                <span>{i18n.btnResolveDispute}</span>
                 <Wand2 size={13} className="opacity-70 transition-transform duration-300 group-hover:rotate-12" />
               </>
             )}

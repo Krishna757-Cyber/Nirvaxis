@@ -437,7 +437,7 @@ export default function HomePage() {
     {
       icon: Building2,
       value: global ? 15 : hqScenario.activeCases,
-      label: "ACTIVE CASES",
+      label: i18n.kpiActive,
       detail: global ? "ACROSS 6 GLOBAL REGIONS" : hqScenario.regionName.toUpperCase(),
       color: "#6ca8ff",
       action: () => (selectedRegion ? setSelectedRegion(null) : selectRegion(activeRegion)),
@@ -445,7 +445,7 @@ export default function HomePage() {
     {
       icon: Globe2,
       value: global ? 11 : countryCounts[activeRegion],
-      label: "COUNTRIES",
+      label: i18n.filterRegions,
       detail: "CONNECTED JURISDICTIONS",
       color: "#679df9",
       action: () => setOverlay("help"),
@@ -453,7 +453,7 @@ export default function HomePage() {
     {
       icon: ShieldCheck,
       value: `${proofScore}%`,
-      label: "VERIFIED PROOF",
+      label: i18n.kpiProof,
       detail: "DETERMINISTIC SOURCE CHECK",
       color: "#37d8a6",
       action: () => launch("actions"),
@@ -550,7 +550,7 @@ export default function HomePage() {
                     NIR<span className="text-lime-400">VAX</span><span className="text-cyan-400">IS</span>
                   </div>
                   <div className="mt-[2.5px] font-mono-t text-[7px] uppercase tracking-[0.2em] text-slate-400 hidden lg:block whitespace-nowrap">
-                    Bilateral Evidence Engine
+                    {i18n.brandTagline}
                   </div>
                 </div>
               </a>
@@ -567,7 +567,7 @@ export default function HomePage() {
                     : "border-slate-800 bg-slate-900/60 hover:text-slate-200"
                 }`}
               >
-                01 · Command Center
+                {i18n.navCommandCenter}
               </button>
               <button
                 type="button"
@@ -578,7 +578,7 @@ export default function HomePage() {
                     : "border-slate-800 bg-slate-900/60 hover:text-slate-200"
                 }`}
               >
-                02 · Global HQ Map
+                {i18n.navGlobalMap}
               </button>
               <button
                 type="button"
@@ -589,7 +589,7 @@ export default function HomePage() {
                     : "border-slate-800 bg-slate-900/60 hover:text-slate-200"
                 }`}
               >
-                03 · Quality Gates
+                {i18n.navQualityGates}
               </button>
               <button
                 type="button"
@@ -600,7 +600,7 @@ export default function HomePage() {
                     : "border-slate-800 bg-slate-900/60 hover:text-slate-200"
                 }`}
               >
-                04 · Model Specs
+                {i18n.navModelSpecs}
               </button>
             </nav>
 
@@ -685,7 +685,7 @@ export default function HomePage() {
                 >
                   <ShieldCheck size={12} className="text-lime-400 shrink-0" />
                   <span>
-                    CITIZEN <span className="mode-word hidden 2xl:inline">APPEAL</span>
+                    {i18n.citizenAppeal}
                   </span>
                 </button>
                 <button
@@ -697,7 +697,7 @@ export default function HomePage() {
                 >
                   <Building2 size={12} className="text-cyan-400 shrink-0" />
                   <span>
-                    OWNER <span className="mode-word hidden 2xl:inline">DIAGNOSTIC</span>
+                    {i18n.ownerDiagnostic}
                   </span>
                 </button>
               </div>
@@ -710,7 +710,7 @@ export default function HomePage() {
                 title="Launch focused case workbench or vent box (⌘K)"
               >
                 <Plus size={13} />
-                <span className="hidden xl:inline">LAUNCH </span>WORKBENCH
+                <span>{i18n.launchWorkbench}</span>
                 <kbd className="hidden 2xl:inline">⌘ K</kbd>
               </button>
 
@@ -1038,6 +1038,7 @@ export default function HomePage() {
                     phase={phase}
                     onResolve={run}
                     progress={progress}
+                    language={language}
                   />
                 </div>
                 <div className="h-full min-h-[560px] xl:min-h-0 flex flex-col">
@@ -1049,6 +1050,7 @@ export default function HomePage() {
                     logs={logs}
                     visibleRedTeam={visibleRedTeam}
                     onFocusSource={focusSource}
+                    language={language}
                   />
                 </div>
                 <div className="h-full min-h-[560px] xl:min-h-0 flex flex-col">
@@ -1088,17 +1090,17 @@ export default function HomePage() {
               <div className="mission-heading mb-6">
                 <div className="mission-context">
                   <span className="eyebrow">
-                    <span className="mini-cross" /> STAGE 02 / GLOBAL OPERATIONS COCKPIT
+                    <span className="mini-cross" /> {i18n.stage2Eyebrow}
                   </span>
-                  <span className="mission-tagline">An official “no” is where we begin.</span>
+                  <span className="mission-tagline">{i18n.stage2Tagline}</span>
                 </div>
                 <div className="hud-banner">
                   <span className="hud-slashes">{"//////"}</span>
                   <div>
                     <h1>
-                      GLOBAL RESOLUTION MAP <span>— AI ENGINE LIVE</span>
+                      {i18n.stage2Title}
                     </h1>
-                    <span className="hud-subtitle">INTELLIGENCE THAT TURNS FRICTION INTO FORWARD MOTION</span>
+                    <span className="hud-subtitle">{i18n.stage2Subtitle}</span>
                   </div>
                   <span className="hud-slashes">{"//////"}</span>
                 </div>
@@ -1367,10 +1369,10 @@ export default function HomePage() {
               <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-800/80 pb-4">
                 <div>
                   <span className="font-mono-t text-[8px] uppercase tracking-[0.32em] text-violet-400 font-bold">
-                    § STAGE 03 · DETERMINISM ARCHITECTURE
+                    {i18n.stage4Eyebrow}
                   </span>
                   <h2 className="mt-1 font-display text-2xl font-extrabold tracking-tight text-slate-100 md:text-3xl">
-                    Every rejection is a bug report <span className="text-glow-cyan">nobody filed.</span>
+                    {i18n.stage4Title}
                   </h2>
                 </div>
                 <span className="font-mono-t text-[8px] uppercase tracking-widest text-slate-400">
@@ -1379,7 +1381,7 @@ export default function HomePage() {
               </div>
 
               <p className="mt-3 max-w-2xl text-[13px] leading-relaxed text-slate-400">
-                Today, a wrongfully rejected citizen waits in a grievance queue for months — while the institution that wronged them never learns the wording of its own form. NIRVAXIS closes the loop in both directions with one sealed run.
+                {i18n.stage4Desc}
               </p>
 
               <div className="mt-8 grid gap-5 lg:grid-cols-2">
@@ -1392,7 +1394,7 @@ export default function HomePage() {
                     </div>
                     <div>
                       <p className="font-mono-t text-[7.5px] uppercase tracking-[0.3em] text-lime-400">Citizen Mode</p>
-                      <h3 className="font-display text-lg font-extrabold text-slate-100">The Appeal Kit</h3>
+                      <h3 className="font-display text-lg font-extrabold text-slate-100">{i18n.citizenModeTitle}</h3>
                     </div>
                   </div>
                   <ul className="mt-5 space-y-2.5 text-[11px] leading-snug text-slate-300">
@@ -1417,7 +1419,7 @@ export default function HomePage() {
                     }}
                     className="mt-5 flex items-center gap-2 font-mono-t text-[9px] font-bold uppercase tracking-[0.2em] text-lime-400 transition-colors hover:text-lime-300 cursor-pointer"
                   >
-                    Flip to Citizen Mode & Open Workbench <ArrowRight size={11} />
+                    {i18n.flipToCitizen} <ArrowRight size={11} />
                   </button>
                 </div>
 
@@ -1430,7 +1432,7 @@ export default function HomePage() {
                     </div>
                     <div>
                       <p className="font-mono-t text-[7.5px] uppercase tracking-[0.3em] text-cyan-400">System Owner Mode</p>
-                      <h3 className="font-display text-lg font-extrabold text-slate-100">The Diagnostic Packet</h3>
+                      <h3 className="font-display text-lg font-extrabold text-slate-100">{i18n.ownerModeTitle}</h3>
                     </div>
                   </div>
                   <ul className="mt-5 space-y-2.5 text-[11px] leading-snug text-slate-300">
@@ -1455,7 +1457,7 @@ export default function HomePage() {
                     }}
                     className="mt-5 flex items-center gap-2 font-mono-t text-[9px] font-bold uppercase tracking-[0.2em] text-cyan-400 transition-colors hover:text-cyan-300 cursor-pointer"
                   >
-                    Flip to Owner Mode & Open Diagnostic <ArrowRight size={11} />
+                    {i18n.flipToOwner} <ArrowRight size={11} />
                   </button>
                 </div>
               </div>
@@ -1463,32 +1465,32 @@ export default function HomePage() {
               {/* Three Quality Gates */}
               <div className="mt-14">
                 <p className="font-mono-t text-[8px] uppercase tracking-[0.32em] text-violet-400 font-bold">
-                  § Determinism Over Décor
+                  {i18n.stage3Eyebrow}
                 </p>
                 <h2 className="mt-2 font-display text-2xl font-extrabold tracking-tight text-slate-100 md:text-3xl">
-                  Three quality gates. <span className="text-glow-cyan">Zero vibes.</span>
+                  {i18n.stage3Title}
                 </h2>
 
                 <div className="mt-7 grid gap-4 md:grid-cols-3">
                   {[
                     {
                       icon: Fingerprint,
-                      title: "01 · The PII Shield",
-                      body: "A deterministic regex + seeded-literal redactor runs first, on your device. Aadhaar, PAN, UAN, PNR, emails, phones, addresses — tokenized before any network call. Re-hydration happens locally, after the models return. Your PII is never a tensor.",
+                      title: i18n.gate1Title,
+                      body: i18n.gate1Desc,
                       foot: "redact() · client-side · rehydrate() · local-only",
                       tone: "text-amber-400 border-amber-400/30 bg-amber-400/5",
                     },
                     {
                       icon: ScanSearch,
-                      title: "02 · Verbatim Quote Check",
-                      body: "Every legal citation the draft leans on is string-matched against Tavily-retrieved official text. Normalized substring, character class, ratio score — no model grades its homework. A citation that fails the gate never reaches your letter.",
+                      title: i18n.gate2Title,
+                      body: i18n.gate2Desc,
                       foot: "quoteInText() · ratio ≥ 0.86 · Tavily .gov/.org allowlist",
                       tone: "text-emerald-400 border-emerald-400/30 bg-emerald-400/5",
                     },
                     {
                       icon: ShieldCheck,
-                      title: "03 · The Red-Team Loop",
-                      body: "K3-Ultron is re-instantiated as a hostile reviewing officer. It files three objections — anchor failure, burden misallocation, register mismatch — and the drafter must patch each one. What survives is filing-ready, not model-fluent.",
+                      title: i18n.gate3Title,
+                      body: i18n.gate3Desc,
                       foot: "Adversarial self-critique · 3 objection/patch cycles · sealed",
                       tone: "text-violet-400 border-violet-400/30 bg-violet-400/5",
                     },
@@ -1675,11 +1677,11 @@ export default function HomePage() {
               </div>
 
               <p className="max-w-xl text-[9px] leading-relaxed text-slate-500">
-                NIRVAXIS drafts filing-ready artifacts; it is not legal advice and does not create an attorney–client relationship. Every artifact is sealed by a red-team loop and should be confirmed before submission. Case data shown is illustrative.
+                {i18n.footerDisclaimer}
               </p>
 
               <p className="font-mono-t text-[7.5px] uppercase tracking-[0.3em] text-slate-600">
-                © 2026 NIRVAXIS · Built for the Nebius × NVIDIA Global AI Hackathon
+                {i18n.footerRights}
               </p>
             </div>
           </footer>
