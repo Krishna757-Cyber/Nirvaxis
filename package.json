@@ -1,5 +1,7 @@
 {
-  "name": "nextjs-postgresql-template",
+  "name": "nirvaxis",
+  "description": "Bilateral Evidence & Resolution Engine for Administrative Friction | Nebius x NVIDIA 2026",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
